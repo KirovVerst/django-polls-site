@@ -20,6 +20,8 @@ from django.urls import path
 
 from polls_service import settings
 
-urlpatterns = [path("admin/", admin.site.urls), path("", include("polls.urls"))] + static(
-    settings.STATIC_URL, document_root=settings.STATIC_ROOT
-)
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    path("", include("polls.urls")),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
