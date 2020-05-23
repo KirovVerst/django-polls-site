@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -47,6 +48,11 @@ class QuestionIndexViewTests(TestCase):
 
 
 class QuestionDetailViewTests(TestCase):
+    def setUp(self) -> None:
+        user_password = "temporary"
+        user = User.objects.create_user("temporary", "temporary@gmail.com", user_password)
+        self.client.login(username=user.username, password="temporary")
+
     def test_future_question(self):
         future_question = create_question(question_text="Future question.", days=30)
         url = reverse("polls:detail", args=(future_question.id,))
