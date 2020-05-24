@@ -1,7 +1,11 @@
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import forms as auth_forms
+
+from polls_service.forms import BaseForm
 
 
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control"}))
+class UserLoginForm(BaseForm, auth_forms.AuthenticationForm):
+    ...
+
+
+class PasswordChangeForm(BaseForm, auth_forms.PasswordChangeForm):
+    ...
