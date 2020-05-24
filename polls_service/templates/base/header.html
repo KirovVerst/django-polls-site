@@ -12,6 +12,7 @@
                         Hi, {{ user.username }}!
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change password</a>
                         <a class="dropdown-item" href="{% url 'accounts:logout' %}?next=/">Logout</a>
                     </div>
                 </div>
