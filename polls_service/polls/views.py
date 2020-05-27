@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -41,7 +42,12 @@ def vote(request, pk):
         return render(
             request, "polls/detail.html", {"question": question, "error_message": "You didn't select a choice."}
         )
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+    update_user_choice(question, selected_choice, request.user)
+    return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+
+def update_user_choice(question: Question, choice: Choice, user: User) -> None:
+    voted = question.votes_set.filter(user=user).first()
+    if voted:
+        voted.delete()
+    question.votes_set.create(user=user, choice=choice)
