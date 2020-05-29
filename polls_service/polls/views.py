@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -10,6 +9,7 @@ from django.views import generic
 
 from .models import Choice
 from .models import Question
+from .services import VoteService
 
 
 class IndexView(generic.ListView):
@@ -35,19 +35,16 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def vote(request, pk):
+    service = VoteService(request.user)
     question = get_object_or_404(Question, pk=pk)
+
     try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+        service.vote(question, request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
-        return render(
-            request, "polls/detail.html", {"question": question, "error_message": "You didn't select a choice."}
-        )
-    update_user_choice(question, selected_choice, request.user)
+        return render_choice_not_selected_view(request, question)
+
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 
-def update_user_choice(question: Question, choice: Choice, user: User) -> None:
-    voted = question.votes_set.filter(user=user).first()
-    if voted:
-        voted.delete()
-    question.votes_set.create(user=user, choice=choice)
+def render_choice_not_selected_view(request, question: Question):
+    return render(request, "polls/detail.html", {"question": question, "error_message": "You didn't select a choice."})
