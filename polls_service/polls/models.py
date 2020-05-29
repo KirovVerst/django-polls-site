@@ -31,11 +31,8 @@ class Choice(models.Model):
     def __str__(self) -> str:
         return self.choice_text
 
-    def votes_count(self):
-        return self.votes_set.count()
 
-
-class Votes(models.Model):
+class Vote(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)

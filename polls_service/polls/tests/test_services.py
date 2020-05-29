@@ -18,15 +18,15 @@ class VoteServiceTest(TestCase):
     def test_vote(self):
         self.service.vote(self.question, self.choice_1.id)
 
-        self.assertEqual(self.choice_1.votes_count(), 1)
-        self.assertEqual(self.choice_1.votes_set.first().user, self.user)
+        self.assertEqual(self.choice_1.vote_set.count(), 1)
+        self.assertEqual(self.choice_1.vote_set.first().user, self.user)
 
-        self.assertEqual(self.choice_2.votes_count(), 0)
+        self.assertEqual(self.choice_2.vote_set.count(), 0)
 
     def test_update_vote(self):
         self.service.vote(self.question, self.choice_1.id)
-        self.assertEqual(self.choice_1.votes_count(), 1)
+        self.assertEqual(self.choice_1.vote_set.count(), 1)
 
         self.service.vote(self.question, self.choice_2.id)
-        self.assertEqual(self.choice_2.votes_count(), 1)
-        self.assertEqual(self.choice_1.votes_count(), 0)
+        self.assertEqual(self.choice_2.vote_set.count(), 1)
+        self.assertEqual(self.choice_1.vote_set.count(), 0)
