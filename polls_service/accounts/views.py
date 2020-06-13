@@ -16,6 +16,11 @@ class LoginView(BaseView, auth_views.LoginView):
 class RegistrationView(BaseView, FormView):
     form_class = UserRegistrationForm
     template_name = "accounts/registration.html"
+    success_url = reverse_lazy("accounts:login")
+
+    def form_valid(self, form):
+        form.save()
+        return super(RegistrationView, self).form_valid(form)
 
 
 class LogoutView(auth_views.LogoutView):
