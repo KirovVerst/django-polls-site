@@ -7,5 +7,9 @@ class UserLoginForm(BaseForm, auth_forms.AuthenticationForm):
     ...
 
 
+class UserRegistrationForm(BaseForm, auth_forms.UserCreationForm):
+    ...
+
+
 class PasswordChangeForm(BaseForm, auth_forms.PasswordChangeForm):
     ...
