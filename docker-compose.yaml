@@ -6,6 +6,16 @@ services:
       dockerfile: Dockerfile
       context: .
     container_name: polls
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
     ports:
     - "8000:8000"
+    depends_on:
+    - postgres
+    environment:
+    - DEBUG=0
+
+  postgres:
+    image: postgres:12.3
+    container_name: polls_postgres
+    ports:
+    - "5432:5432"
