@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 
+
+def read_env_var(key, default):
+    return os.environ.get(key, default=default)
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -18,11 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", default="foo")
+SECRET_KEY = read_env_var("SECRET_KEY", "foo")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default=1))
-
+DEBUG = bool(read_env_var("DEBUG", "1"))
 
 ALLOWED_HOSTS = []
 
@@ -72,7 +76,16 @@ WSGI_APPLICATION = "polls_service.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path.join(BASE_DIR, "db.sqlite3")}}
+DATABASES = {
+    "default": {
+        "ENGINE": read_env_var("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": read_env_var("DB_NAME", "postgres"),
+        "USER": read_env_var("DB_USER", "postgres"),
+        "PASSWORD": read_env_var("DB_PASSWORD", "postgres"),
+        "HOST": read_env_var("DB_HOST", "localhost"),
+        "PORT": int(read_env_var("DB_PORT", "5432")),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
